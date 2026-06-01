@@ -1,0 +1,51 @@
+# Contexto del Proyecto AMVet
+
+## Descripción General
+AMVet es un sistema de gestión veterinaria integral que permite la administración de pacientes, propietarios, citas médicas, historial clínico, recetas, seguimiento e inventario de medicamentos.
+
+## Tecnologías Utilizadas
+- **Backend**: FastAPI (Python 3.11), SQLAlchemy (ORM), SQLite.
+- **Frontend**: React (Vite), Axios, TailwindCSS.
+- **Infraestructura**: Docker & Docker Compose.
+
+## Acceso al Sistema
+- **URL Pública**: http://104.198.128.41
+- **API (Swagger)**: http://104.198.128.41:8000/docs
+- **Credenciales Admin**: admin@amvet.bo / admin123
+
+## Arquitectura de Red (Docker)
+- **Frontend**: Puerto 80 (mapeado desde el host).
+- **Backend**: Puerto 8000 (mapeado desde el host).
+- **Comunicación**: El frontend consume la API a través de la IP pública configurada en la variable de entorno VITE_API_URL.
+
+## Listado de Endpoints Principales
+
+### Autenticación
+- POST /api/auth/login: Inicio de sesión.
+- GET /api/auth/me: Obtener datos del usuario actual.
+
+### Gestión de Pacientes y Propietarios
+- GET/POST /api/pacientes: Listado y creación de mascotas.
+- PUT/DELETE /api/pacientes/{id}: Edición y eliminación.
+- GET/POST /api/propietarios: Gestión de dueños de mascotas.
+
+### Atención Médica
+- GET /api/historial/: Listado general de historiales.
+- POST /api/historial/: Crear registro clínico.
+- GET /api/citas/hoy: Citas programadas para el día actual.
+- PATCH /api/citas/{id}/estado: Cambio rápido de estado (completada/cancelada).
+
+### Inventario
+- GET /api/inventario/: Listado de stock.
+- POST /api/inventario/{id}/movimiento: Registrar entrada o salida de productos.
+
+### Reportes (Analítica)
+- GET /api/reportes/stats: Resumen estadístico.
+- GET /api/reportes/consultas-por-mes: Datos para gráficas.
+- GET /api/reportes/inventario-bajo: Alertas de stock crítico.
+
+## Notas de Estabilización
+1. Se corrigió la compatibilidad de bcrypt (<4.0.0) para evitar errores de hash en login.
+2. Se reconstruyeron los modelos SQLAlchemy faltantes en models.py.
+3. Se sincronizaron todas las llamadas del frontend con rutas operativas en el backend (PUT, PATCH, GET /).
+4. Se optimizaron los archivos .dockerignore para evitar el copiado de archivos innecesarios (db, node_modules).

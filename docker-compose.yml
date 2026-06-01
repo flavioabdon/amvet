@@ -1,0 +1,21 @@
+services:
+  backend:
+    build: ./backend
+    container_name: amvet-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/amvet.db:/app/amvet.db
+      - ./backend/uploads:/app/uploads
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: amvet-frontend
+    ports:
+      - "80:5173"
+    environment:
+      - VITE_API_URL=http://104.198.128.41:8000/api
+    restart: unless-stopped
+    depends_on:
+      - backend
