@@ -1,0 +1,20 @@
+.git
+.gitignore
+.DS_Store
+README.md
+docker-compose.yml
+deploy_server.sh
+update_docker.sh
+CORRECCIONES.md
+.context-project
+
+# Frontend ignores
+frontend/node_modules/
+frontend/dist/
+
+# Backend ignores
+backend/venv/
+backend/__pycache__/
+backend/*.pyc
+backend/amvet.db
+backend/uploads/

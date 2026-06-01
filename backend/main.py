@@ -77,6 +77,10 @@ def crear_admin():
 async def startup_event():
     crear_admin()
 
-@app.get("/")
-def root():
-    return {"msg": "AMVet API funcionando"}
+# 7. Servir frontend (React SPA) si existe (ideal para Render.com / contenedor único)
+if os.path.exists("dist"):
+    app.mount("/", StaticFiles(directory="dist", html=True), name="frontend")
+else:
+    @app.get("/")
+    def root():
+        return {"msg": "AMVet API funcionando"}
