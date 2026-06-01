@@ -79,7 +79,25 @@ async def startup_event():
 
 # 7. Servir frontend (React SPA) si existe (ideal para Render.com / contenedor único)
 if os.path.exists("dist"):
-    app.mount("/", StaticFiles(directory="dist", html=True), name="frontend")
+    from fastapi.responses import FileResponse
+    
+    # Servir la carpeta de assets directamente
+    app.mount("/assets", StaticFiles(directory="dist/assets"), name="assets")
+    
+    # Manejar cualquier otra ruta que no sea API para el React Router (SPA)
+    @app.get("/{catchall:path}")
+    def serve_spa(catchall: str):
+        # Evitar capturar rutas de la API (dejar que FastAPI las resuelva o devuelva 404 de API)
+        if catchall.startswith("api") or catchall.startswith("docs") or catchall.startswith("openapi.json"):
+            raise HTTPException(status_code=404, detail="Not Found")
+            
+        # Comprobar si existe el archivo en la carpeta raíz de dist (ej: favicon.ico, robots.txt)
+        file_path = os.path.join("dist", catchall)
+        if os.path.exists(file_path) and os.path.isfile(file_path):
+            return FileResponse(file_path)
+            
+        # Servir siempre index.html para soportar rutas del frontend (React Router)
+        return FileResponse("dist/index.html")
 else:
     @app.get("/")
     def root():
